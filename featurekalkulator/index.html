@@ -1,11 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Clean Calculator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    
+<body class="light-mode">
+
+    <!-- Container Utama Halaman -->
+    <div class="page-container">
+
+        <!-- Area Kalkulator -->
+        <div class="calculator">
+            
+                <!-- Navigasi & Tampilan -->
+                <div class="display-area">
+                    <header class="app-header">
+                        <div class="menu-toggle" id="menu-toggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="history-icon">
+                            <img src="https://img.icons8.com/material-rounded/24/null/time-machine.png" alt="history">
+                        </div>
+                    </header>
+
+                    <div class="display-container">
+                        <div class="expression" id="expression-display"></div>
+                        <div class="current-operand" id="current-display">0</div>
+                    </div>
+                </div>
+
+                <!-- Tombol-tombol -->
+                <div class="button-grid">
+                    <button class="btn btn-function" data-action="all-clear">AC</button>
+                    <button class="btn btn-function" data-action="pos-neg">+/-</button>
+                    <button class="btn btn-function" data-action="percent">%</button>
+                    <button class="btn btn-operator" data-action="divide">/</button>
+
+                    <button class="btn btn-num">7</button>
+                    <button class="btn btn-num">8</button>
+                    <button class="btn btn-num">9</button>
+                    <button class="btn btn-operator" data-action="multiply">×</button>
+
+                    <button class="btn btn-num">4</button>
+                    <button class="btn btn-num">5</button>
+                    <button class="btn btn-num">6</button>
+                    <button class="btn btn-operator" data-action="subtract">−</button>
+
+                    <button class="btn btn-num">1</button>
+                    <button class="btn btn-num">2</button>
+                    <button class="btn btn-num">3</button>
+                    <button class="btn btn-operator" data-action="add">+</button>
+
+                    <button class="btn btn-num btn-zero">0</button>
+                    <button class="btn btn-num">.</button>
+                    <button class="btn btn-operator btn-equals" data-action="equals">=</button>
+                </div>
+        </div>
+
+        <!-- Sidenav/Menu Opsi -->
+        <div class="sidenav" id="sidenav">
+            <header class="sidenav-header">
+                <h2>Opsi</h2>
+                <span class="close-btn" id="close-menu">&times;</span>
+            </header>
+            <div class="sidenav-content">
+                <div class="theme-switch">
+                    <p>Ubah Tema</p>
+                    <button class="btn-theme-toggle" id="theme-toggle-btn">Mode Gelap</button>
+                </div>
+            </div>
+        </div>
+        <div class="overlay" id="overlay"></div>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
