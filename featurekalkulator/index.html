@@ -3,79 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clean Calculator</title>
+    <title>Aplikasi Multiguna</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="light-mode">
+<body>
 
-    <!-- Container Utama Halaman -->
-    <div class="page-container">
+    <div class="app-container">
+        <header class="app-header">
+            <button class="menu-btn">&#9776;</button>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" onclick="switchTab('calculator')">Kalkulator</button>
+                <button class="tab-btn" onclick="switchTab('converter')">Pengonversi</button>
+                <button class="tab-btn" onclick="switchTab('bmi')">BMI</button>
+            </nav>
+            <button class="auth-btn" onclick="openAuthModal()">Sign Up / Log In</button>
+        </header>
 
-        <!-- Area Kalkulator -->
-        <div class="calculator">
-            
-                <!-- Navigasi & Tampilan -->
-                <div class="display-area">
-                    <header class="app-header">
-                        <div class="menu-toggle" id="menu-toggle">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <div class="history-icon">
-                            <img src="https://img.icons8.com/material-rounded/24/null/time-machine.png" alt="history">
-                        </div>
-                    </header>
+        <main id="view-calculator" class="tab-content active">
+            <div class="calc-display">
+                <div class="calc-expression" id="calc-expression">12 + 24 × 3</div>
+                <div class="calc-result" id="calc-result">84</div>
+                <div class="divider-line"></div>
+            </div>
+            <div class="keypad-grid">
+                <button class="btn btn-cyan" onclick="clearCalc()">AC</button>
+                <button class="btn btn-cyan" onclick="toggleSign()">+/-</button>
+                <button class="btn btn-cyan" onclick="appendOperator('%')">%</button>
+                <button class="btn btn-orange" onclick="appendOperator('÷')">÷</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('7')">7</button>
+                <button class="btn btn-gray" onclick="appendNum('8')">8</button>
+                <button class="btn btn-gray" onclick="appendNum('9')">9</button>
+                <button class="btn btn-orange" onclick="appendOperator('×')">×</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('4')">4</button>
+                <button class="btn btn-gray" onclick="appendNum('5')">5</button>
+                <button class="btn btn-gray" onclick="appendNum('6')">6</button>
+                <button class="btn btn-orange" onclick="appendOperator('-')">-</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('1')">1</button>
+                <button class="btn btn-gray" onclick="appendNum('2')">2</button>
+                <button class="btn btn-gray" onclick="appendNum('3')">3</button>
+                <button class="btn btn-orange" onclick="appendOperator('+')">+</button>
+                
+                <button class="btn btn-gray btn-zero" onclick="appendNum('0')">0</button>
+                <button class="btn btn-gray" onclick="appendNum('.')">.</button>
+                <button class="btn btn-yellow" onclick="calculateResult()">=</button>
+            </div>
+        </main>
 
-                    <div class="display-container">
-                        <div class="expression" id="expression-display"></div>
-                        <div class="current-operand" id="current-display">0</div>
-                    </div>
-                </div>
-
-                <!-- Tombol-tombol -->
-                <div class="button-grid">
-                    <button class="btn btn-function" data-action="all-clear">AC</button>
-                    <button class="btn btn-function" data-action="pos-neg">+/-</button>
-                    <button class="btn btn-function" data-action="percent">%</button>
-                    <button class="btn btn-operator" data-action="divide">/</button>
-
-                    <button class="btn btn-num">7</button>
-                    <button class="btn btn-num">8</button>
-                    <button class="btn btn-num">9</button>
-                    <button class="btn btn-operator" data-action="multiply">×</button>
-
-                    <button class="btn btn-num">4</button>
-                    <button class="btn btn-num">5</button>
-                    <button class="btn btn-num">6</button>
-                    <button class="btn btn-operator" data-action="subtract">−</button>
-
-                    <button class="btn btn-num">1</button>
-                    <button class="btn btn-num">2</button>
-                    <button class="btn btn-num">3</button>
-                    <button class="btn btn-operator" data-action="add">+</button>
-
-                    <button class="btn btn-num btn-zero">0</button>
-                    <button class="btn btn-num">.</button>
-                    <button class="btn btn-operator btn-equals" data-action="equals">=</button>
-                </div>
-        </div>
-
-        <!-- Sidenav/Menu Opsi -->
-        <div class="sidenav" id="sidenav">
-            <header class="sidenav-header">
-                <h2>Opsi</h2>
-                <span class="close-btn" id="close-menu">&times;</span>
-            </header>
-            <div class="sidenav-content">
-                <div class="theme-switch">
-                    <p>Ubah Tema</p>
-                    <button class="btn-theme-toggle" id="theme-toggle-btn">Mode Gelap</button>
+        <main id="view-bmi" class="tab-content">
+            <div class="bmi-header">
+                <div class="bmi-icon">&#x1F9CD;</div>
+                <div class="bmi-header-text">
+                    <h2>Kalkulator BMI</h2>
+                    <p>Hitung Indeks Massa Tubuh Anda</p>
                 </div>
             </div>
-        </div>
-        <div class="overlay" id="overlay"></div>
+            
+            <div class="bmi-inputs">
+                <div class="input-card">
+                    <label>Tinggi Badan</label>
+                    <div class="input-box">
+                        <input type="number" id="height-input" value="170">
+                        <span class="unit-select">cm &#9662;</span>
+                    </div>
+                </div>
+                <div class="input-card">
+                    <label>Berat Badan</label>
+                    <div class="input-box">
+                        <input type="number" id="weight-input" value="65">
+                        <span class="unit-select">kg &#9662;</span>
+                    </div>
+                </div>
+            </div>
 
+            <button class="btn-calculate-bmi" onclick="calculateBMI()">Hitung BMI</button>
+
+            <div class="bmi-results">
+                <div class="result-box">
+                    <span class="result-title">BMI Anda</span>
+                    <div class="result-value" id="bmi-value">22.5</div>
+                </div>
+                <div class="result-box">
+                    <span class="result-title">Kategori</span>
+                    <div class="result-status status-green" id="bmi-status">Normal</div>
+                    <div class="result-subtext" id="bmi-desc">Berat badan Anda ideal.</div>
+                </div>
+            </div>
+
+            <div class="bmi-range-container">
+                <div class="range-bar">
+                    <div class="bar bar-kurus"></div>
+                    <div class="bar bar-normal"></div>
+                    <div class="bar bar-overweight"></div>
+                    <div class="bar bar-obesitas"></div>
+                </div>
+                <div class="range-labels">
+                    <div><small>&lt; 18.5</small><br><strong class="label-kurus">Kurus</strong></div>
+                    <div><small>18.5 - 24.9</small><br><strong class="label-normal">Normal</strong></div>
+                    <div><small>25 - 29.9</small><br><strong class="label-overweight">Overweight</strong></div>
+                    <div><small>&ge; 30</small><br><strong class="label-obesitas">Obesitas</strong></div>
+                </div>
+            </div>
+
+            <div class="bmi-info-box">
+                <div class="info-icon">i</div>
+                <p>BMI hanyalah indikator umum dan bukan diagnosis medis. Konsultasikan dengan profesional kesehatan untuk hasil yang lebih akurat.</p>
+            </div>
+        </main>
+
+        <main id="view-converter" class="tab-content">
+            <div class="currency-display">
+                <div class="currency-row">
+                    <span class="currency-label">Dollar AS USD &#8644;</span>
+                    <input type="text" id="usd-val" value="100" class="currency-input">
+                </div>
+                <div class="currency-row">
+                    <span class="currency-label">Indonesia IDR &#8644;</span>
+                    <input type="text" id="idr-val" value="1.764.980,00" class="currency-input" readonly>
+                </div>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="keypad-grid simple-grid">
+                <button class="btn btn-gray" onclick="convInput('7')">7</button>
+                <button class="btn btn-gray" onclick="convInput('8')">8</button>
+                <button class="btn btn-gray" onclick="convInput('9')">9</button>
+                <button class="btn btn-orange" onclick="convOp('÷')">÷</button>
+                
+                <button class="btn btn-gray" onclick="convInput('4')">4</button>
+                <button class="btn btn-gray" onclick="convInput('5')">5</button>
+                <button class="btn btn-gray" onclick="convInput('6')">6</button>
+                <button class="btn btn-gray empty-btn"></button>
+                
+                <button class="btn btn-gray" onclick="convInput('1')">1</button>
+                <button class="btn btn-gray" onclick="convInput('2')">2</button>
+                <button class="btn btn-gray" onclick="convInput('3')">3</button>
+                <button class="btn btn-gray empty-btn"></button>
+                
+                <button class="btn btn-gray btn-zero" onclick="convInput('0')">0</button>
+                <button class="btn btn-gray" onclick="convInput(',')">,</button>
+                <button class="btn btn-yellow" onclick="convBackspace()">&#x232B;</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="auth-modal" class="modal-backdrop">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeAuthModal()">&times;</button>
+
+            <div id="login-section">
+                <h2 class="auth-title">Log In</h2>
+                <form onsubmit="handleAuthSubmit(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-input" placeholder="Masukkan email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-input" placeholder="Masukkan password" required>
+                    </div>
+                    <button type="submit" class="btn-auth-submit">Log In</button>
+                </form>
+                <p class="auth-switch-text">
+                    Belum punya akun? <a href="javascript:void(0)" onclick="toggleAuthForm('signup')">Sign Up</a>
+                </p>
+            </div>
+
+            <div id="signup-section" class="hidden">
+                <h2 class="auth-title">Sign Up</h2>
+                <form onsubmit="handleAuthSubmit(event)">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" class="form-input" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-input" placeholder="Masukkan email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-input" placeholder="Buat password" required>
+                    </div>
+                    <button type="submit" class="btn-auth-submit">Sign Up</button>
+                </form>
+                <p class="auth-switch-text">
+                    Sudah punya akun? <a href="javascript:void(0)" onclick="toggleAuthForm('login')">Log In</a>
+                </p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

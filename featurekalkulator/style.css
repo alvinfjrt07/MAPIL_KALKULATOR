@@ -1,246 +1,420 @@
-/* --- Root Variables: Memisahkan Warna Halaman & Kalkulator --- */
-:root {
-    --primary-purple: #6366F1;
-    --function-red: #EF4444;
-    --success-green: #22C55E;
-    
-    /* Light Mode */
-    --page-bg: #EEF2F6;         /* Background luar halaman */
-    --calc-bg: #FFFFFF;         /* Background khusus kartu kalkulator */
-    --text-primary: #1F2937;
-    --text-secondary: #6B7280;
-    --btn-num-bg: #F3F4F6;
-    --btn-func-bg: #F3F4F6;
-    --btn-op-bg: #E0E7FF;
-    --btn-op-text: #6366F1;
-    --sidenav-bg: #FFFFFF;
-    --overlay-bg: rgba(0, 0, 0, 0.4);
-    
-    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    --grid-spacing: 12px;
-}
-
-/* --- Dark Mode Variables --- */
-body.dark-mode {
-    --page-bg: #111827;         /* Background luar halaman (gelap pekat) */
-    --calc-bg: #1F2937;         /* Background kartu kalkulator */
-    --text-primary: #F3F4F6;
-    --text-secondary: #9CA3AF;
-    --btn-num-bg: #374151;
-    --btn-func-bg: #374151;
-    --btn-op-bg: #4338CA;
-    --btn-op-text: #FFFFFF;
-    --sidenav-bg: #374151;
-    --overlay-bg: rgba(0, 0, 0, 0.6);
-}
-
-/* --- Reset & Layout Utama --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: var(--font-family);
-    transition: background-color 0.2s, color 0.1s;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    background-color: var(--page-bg);
-    color: var(--text-primary);
+    background-color: #f2f4f7;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-.page-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.app-container {
+    width: 380px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* --- Container Kalkulator --- */
-.calculator {
-    background-color: var(--calc-bg);
-    width: 100%;
-    max-width: 380px;
-    padding: 24px;
-    border-radius: 28px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-
-/* --- Display Area & Header --- */
-.display-area {
-    padding-bottom: 20px;
-}
-
+/* Header Navbar */
 .app-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
 }
 
-.menu-toggle {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 22px;
-    height: 16px;
+.menu-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
     cursor: pointer;
+    color: #333;
 }
 
-.menu-toggle span {
-    display: block;
-    height: 2.5px;
-    width: 100%;
-    background-color: var(--text-primary);
-    border-radius: 2px;
-}
-
-.history-icon img {
-    filter: invert(0.5);
-}
-
-body.dark-mode .history-icon img {
-    filter: invert(1);
-}
-
-.display-container {
-    text-align: right;
-    min-height: 80px;
+.nav-tabs {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    background-color: #f0f0f0;
+    padding: 3px;
+    border-radius: 20px;
 }
 
-.expression {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
+.tab-btn {
+    border: none;
+    background: none;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #666;
+}
+
+.tab-btn.active {
+    background-color: #ffb834;
+    color: #000;
+    font-weight: 600;
+}
+
+.auth-btn {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Tab Views */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Kalkulator Display */
+.calc-display {
+    text-align: right;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.calc-expression {
+    font-size: 18px;
+    color: #666;
     min-height: 24px;
 }
 
-.current-operand {
-    font-size: 2.8rem;
-    font-weight: 600;
+.calc-result {
+    font-size: 52px;
+    font-weight: bold;
+    color: #000;
+    margin: 10px 0;
 }
 
-/* --- Tombol Grid --- */
-.button-grid {
+.divider-line {
+    height: 2px;
+    background-color: #2b3a67;
+    width: 35%;
+    margin-left: auto;
+    margin-top: 15px;
+    border-radius: 2px;
+}
+
+/* Keypad Grid */
+.keypad-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--grid-spacing);
+    gap: 12px;
 }
 
 .btn {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border: none;
-    border-radius: 16px;
-    font-size: 1.25rem;
-    font-weight: 600;
+    height: 60px;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .btn:active {
     opacity: 0.8;
 }
 
-.btn-function {
-    background-color: var(--btn-func-bg);
-    color: var(--function-red);
+.btn-cyan { background-color: #64d8cb; color: #fff; border: none; }
+.btn-orange { background-color: #ffb834; color: #fff; border: none; }
+.btn-yellow { background-color: #ffd54f; color: #fff; border: none; }
+.btn-gray { background-color: #f5f5f5; color: #333; border: 1px solid #eee; }
+.btn-zero { grid-column: span 2; }
+.empty-btn { visibility: hidden; }
+
+/* BMI View Styling */
+.bmi-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
-.btn-operator {
-    background-color: var(--btn-op-bg);
-    color: var(--btn-op-text);
+.bmi-icon {
+    font-size: 28px;
+    border: 1px solid #64d8cb;
+    border-radius: 10px;
+    padding: 6px 10px;
 }
 
-.btn-num {
-    background-color: var(--btn-num-bg);
-    color: var(--text-primary);
+.bmi-header-text h2 {
+    font-size: 16px;
+    color: #1b7b9e;
 }
 
-.btn-equals {
-    background-color: var(--success-green);
-    color: #FFFFFF;
+.bmi-header-text p {
+    font-size: 12px;
+    color: #777;
 }
 
-/* Tombol 0 terpisah rapi dengan span 2 kolom */
-.btn-zero {
-    grid-column: span 2;
-    aspect-ratio: auto;
-    height: 100%;
+.bmi-inputs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
-/* --- Sidenav (Menu Opsi Tersembunyi) --- */
-.sidenav {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: -250px; /* Menyembunyikan menu dari layar */
-    background-color: var(--sidenav-bg);
-    overflow-x: hidden;
-    padding-top: 20px;
-    transition: left 0.3s ease;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+.input-card {
+    flex: 1;
 }
 
-.sidenav.active {
-    left: 0; /* Menampilkan menu dari kiri saat diklik */
+.input-card label {
+    display: block;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 6px;
 }
 
-.sidenav-header {
+.input-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px 20px 20px;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-}
-
-.close-btn {
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: var(--text-primary);
-}
-
-.sidenav-content {
-    padding: 20px;
-}
-
-.btn-theme-toggle {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: var(--primary-purple);
-    color: #FFFFFF;
-    border: none;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
+    padding: 8px 10px;
 }
 
-/* --- Overlay --- */
-.overlay {
-    position: fixed;
-    display: none;
+.input-box input {
+    width: 60%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.unit-select {
+    font-size: 12px;
+    color: #777;
+}
+
+.btn-calculate-bmi {
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: var(--overlay-bg);
-    z-index: 900;
+    background-color: #1b7b9e;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
-.overlay.active {
+.bmi-results {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.result-box {
+    flex: 1;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.result-title {
+    font-size: 11px;
+    color: #777;
+}
+
+.result-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1b7b9e;
+    margin-top: 4px;
+}
+
+.result-status {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.result-subtext {
+    font-size: 10px;
+    color: #777;
+    margin-top: 2px;
+}
+
+.status-green { color: #4caf50; }
+
+.bmi-range-container {
+    margin-bottom: 20px;
+}
+
+.range-bar {
+    display: flex;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.bar { flex: 1; }
+.bar-kurus { background-color: #2196f3; }
+.bar-normal { background-color: #4caf50; }
+.bar-overweight { background-color: #ff9800; }
+.bar-obesitas { background-color: #f44336; }
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 10px;
+}
+
+.label-kurus { color: #2196f3; }
+.label-normal { color: #4caf50; }
+.label-overweight { color: #ff9800; }
+.label-obesitas { color: #f44336; }
+
+.bmi-info-box {
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    color: #006064;
+}
+
+.info-icon {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Currency View Styling */
+.currency-display {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.currency-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.currency-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.currency-input {
+    border: none;
+    outline: none;
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    width: 50%;
+    color: #333;
+}
+
+/* Modal Authentication Styling */
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 1000;
+}
+
+.modal-backdrop.active {
+    display: flex;
+}
+
+.modal-card {
+    background-color: #fff;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 20px 20px 0 0;
+    padding: 24px;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.auth-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
     display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.btn-auth-submit {
+    width: 100%;
+    background-color: #0091ff;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.auth-switch-text {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 14px;
+    color: #666;
+}
+
+.auth-switch-text a {
+    color: #0091ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
 }

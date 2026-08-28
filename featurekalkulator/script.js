@@ -1,214 +1,142 @@
-/* --- Konstanta & Variabel --- */
-const calculator = {
-    displayValue: '0',
-    firstOperand: null,
-    waitingForSecondOperand: false,
-    operator: null,
-    expression: ''
-};
-
-// Referensi DOM
-const currentDisplay = document.getElementById('current-display');
-const expressionDisplay = document.getElementById('expression-display');
-const menuToggle = document.getElementById('menu-toggle');
-const sidenav = document.getElementById('sidenav');
-const overlay = document.getElementById('overlay');
-const closeMenu = document.getElementById('close-menu');
-const themeToggleBtn = document.getElementById('theme-toggle-btn');
-const bodyElement = document.body;
-
-/* ==============================
-   Logika Navigasi Sidenav & Tema
-   ============================== */
-
-// Buka Menu
-menuToggle.addEventListener('click', toggleMenu);
-// Tutup Menu (X atau Overlay)
-closeMenu.addEventListener('click', closeSidenav);
-overlay.addEventListener('click', closeSidenav);
-
-function toggleMenu() {
-    sidenav.classList.toggle('active');
-    overlay.classList.toggle('active');
-    menuToggle.classList.toggle('active');
+// Navigasi Tab (Kalkulator, Pengonversi, BMI)
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`view-${tabName}`).classList.add('active');
+    
+    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+        btn.getAttribute('onclick').includes(tabName)
+    );
+    if (activeBtn) activeBtn.classList.add('active');
 }
 
-function closeSidenav() {
-    sidenav.classList.remove('active');
-    overlay.classList.remove('active');
-    menuToggle.classList.remove('active');
+// Fitur Kalkulator Standard
+let expression = "12 + 24 × 3";
+let result = "84";
+
+function updateCalcDisplay() {
+    document.getElementById('calc-expression').innerText = expression;
+    document.getElementById('calc-result').innerText = result;
 }
 
-// Inisialisasi Tema (cek localStorage)
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light-mode';
-    bodyElement.classList.add(savedTheme);
-    updateThemeButtonText(savedTheme);
-});
+function appendNum(num) {
+    if (expression === "0") expression = "";
+    expression += num;
+    updateCalcDisplay();
+}
 
-// Ganti Tema
-themeToggleBtn.addEventListener('click', () => {
-    if (bodyElement.classList.contains('light-mode')) {
-        changeTheme('dark-mode');
+function appendOperator(op) {
+    expression += ` ${op} `;
+    updateCalcDisplay();
+}
+
+function clearCalc() {
+    expression = "";
+    result = "0";
+    updateCalcDisplay();
+}
+
+function toggleSign() {
+    if (expression.startsWith('-')) {
+        expression = expression.slice(1);
     } else {
-        changeTheme('light-mode');
+        expression = '-' + expression;
     }
-});
-
-function changeTheme(themeName) {
-    bodyElement.classList.remove('light-mode', 'dark-mode');
-    bodyElement.classList.add(themeName);
-    localStorage.setItem('theme', themeName); // Simpan pilihan user
-    updateThemeButtonText(themeName);
+    updateCalcDisplay();
 }
-
-function updateThemeButtonText(themeName) {
-    themeToggleBtn.innerText = (themeName === 'light-mode') ? 'Mode Gelap' : 'Mode Terang';
-}
-
-/* ==============================
-   Logika Kalkulator
-   ============================== */
-
-// Menangani klik pada tombol
-document.querySelector('.button-grid').addEventListener('click', (event) => {
-    const { target } = event;
-
-    if (!target.matches('button') && !target.closest('button')) {
-        return;
-    }
-
-    // Jika target adalah span/icon di dalam tombol, ambil tombolnya
-    const button = target.matches('button') ? target : target.closest('button');
-    const { action } = button.dataset;
-
-    if (button.classList.contains('btn-num')) {
-        inputDigit(button.innerText);
-        updateDisplay();
-        return;
-    }
-
-    if (button.classList.contains('btn-operator')) {
-        handleOperator(action);
-        updateDisplay();
-        return;
-    }
-
-    if (action === 'all-clear') {
-        resetCalculator();
-        updateDisplay();
-        return;
-    }
-
-    if (action === 'pos-neg') {
-        togglePositiveNegative();
-        updateDisplay();
-        return;
-    }
-
-    if (action === 'percent') {
-        handlePercent();
-        updateDisplay();
-        return;
-    }
-
-    if (action === 'equals') {
-        calculateResult();
-        updateDisplay();
-        return;
-    }
-});
-
-function updateDisplay() {
-    currentDisplay.innerText = calculator.displayValue;
-    expressionDisplay.innerText = calculator.expression;
-}
-
-function inputDigit(digit) {
-    const { displayValue, waitingForSecondOperand } = calculator;
-
-    if (waitingForSecondOperand === true) {
-        calculator.displayValue = digit;
-        calculator.waitingForSecondOperand = false;
-    } else {
-        calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
-    }
-}
-
-function inputDecimal(dot) {
-    if (!calculator.displayValue.includes(dot)) {
-        calculator.displayValue += dot;
-    }
-}
-
-function handleOperator(nextOperator) {
-    const { firstOperand, displayValue, operator } = calculator;
-    const inputValue = parseFloat(displayValue);
-
-    if (operator && calculator.waitingForSecondOperand) {
-        calculator.operator = nextOperator;
-        calculator.expression = `${firstOperand} ${getOperatorSign(nextOperator)}`;
-        return;
-    }
-
-    if (firstOperand === null) {
-        calculator.firstOperand = inputValue;
-    } else if (operator) {
-        const result = performCalculation[operator](firstOperand, inputValue);
-        calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
-        calculator.firstOperand = result;
-    }
-
-    calculator.waitingForSecondOperand = true;
-    calculator.operator = nextOperator;
-    calculator.expression = `${calculator.firstOperand} ${getOperatorSign(nextOperator)}`;
-}
-
-// Map simbol operator untuk display
-function getOperatorSign(opAction) {
-    const signs = {
-        'add': '+',
-        'subtract': '−',
-        'multiply': '×',
-        'divide': '/'
-    };
-    return signs[opAction];
-}
-
-const performCalculation = {
-    '/': (firstOperand, secondOperand) => firstOperand / secondOperand,
-    '*': (firstOperand, secondOperand) => firstOperand * secondOperand,
-    '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
-    '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
-};
 
 function calculateResult() {
-    const { firstOperand, displayValue, operator } = calculator;
-    const inputValue = parseFloat(displayValue);
+    try {
+        let parsedExp = expression.replace(/×/g, '*').replace(/÷/g, '/');
+        result = eval(parsedExp);
+    } catch (e) {
+        result = "Error";
+    }
+    updateCalcDisplay();
+}
 
-    if (operator && !calculator.waitingForSecondOperand) {
-        const result = performCalculation[operator](firstOperand, inputValue);
+// Fitur BMI
+function calculateBMI() {
+    const heightCm = parseFloat(document.getElementById('height-input').value);
+    const weightKg = parseFloat(document.getElementById('weight-input').value);
+
+    if (heightCm > 0 && weightKg > 0) {
+        const heightM = heightCm / 100;
+        const bmi = (weightKg / (heightM * heightM)).toFixed(1);
         
-        calculator.expression = `${firstOperand} ${getOperatorSign(operator)} ${inputValue}`;
-        calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
-        calculator.firstOperand = result;
-        calculator.operator = null;
-        calculator.waitingForSecondOperand = false;
+        document.getElementById('bmi-value').innerText = bmi;
+
+        const statusEl = document.getElementById('bmi-status');
+        const descEl = document.getElementById('bmi-desc');
+
+        if (bmi < 18.5) {
+            statusEl.innerText = "Kurus";
+            statusEl.className = "result-status label-kurus";
+            descEl.innerText = "Berat badan Anda kurang.";
+        } else if (bmi <= 24.9) {
+            statusEl.innerText = "Normal";
+            statusEl.className = "result-status status-green";
+            descEl.innerText = "Berat badan Anda ideal.";
+        } else if (bmi <= 29.9) {
+            statusEl.innerText = "Overweight";
+            statusEl.className = "result-status label-overweight";
+            descEl.innerText = "Berat badan Anda berlebih.";
+        } else {
+            statusEl.innerText = "Obesitas";
+            statusEl.className = "result-status label-obesitas";
+            descEl.innerText = "Anda berada dalam kategori obesitas.";
+        }
     }
 }
 
-function resetCalculator() {
-    calculator.displayValue = '0';
-    calculator.firstOperand = null;
-    calculator.waitingForSecondOperand = false;
-    calculator.operator = null;
-    calculator.expression = '';
+// Fitur Pengonversi Mata Uang
+const rateUsdToIdr = 17649.80;
+
+function convInput(val) {
+    const usdInput = document.getElementById('usd-val');
+    if (usdInput.value === "0") usdInput.value = "";
+    usdInput.value += val;
+    updateCurrency();
 }
 
-function togglePositiveNegative() {
-    calculator.displayValue = (parseFloat(calculator.displayValue) * -1).toString();
+function convBackspace() {
+    const usdInput = document.getElementById('usd-val');
+    usdInput.value = usdInput.value.slice(0, -1);
+    if (usdInput.value === "") usdInput.value = "0";
+    updateCurrency();
 }
 
-function handlePercent() {
-    calculator.displayValue = (parseFloat(calculator.displayValue) / 100).toString();
+function updateCurrency() {
+    const usdVal = parseFloat(document.getElementById('usd-val').value) || 0;
+    const idrVal = usdVal * rateUsdToIdr;
+    document.getElementById('idr-val').value = idrVal.toLocaleString('id-ID', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Fitur Popup Modal Log In / Sign Up
+function openAuthModal() {
+    document.getElementById('auth-modal').classList.add('active');
+}
+
+function closeAuthModal() {
+    document.getElementById('auth-modal').classList.remove('active');
+}
+
+function toggleAuthForm(mode) {
+    if (mode === 'signup') {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('signup-section').classList.remove('hidden');
+    } else {
+        document.getElementById('signup-section').classList.add('hidden');
+        document.getElementById('login-section').classList.remove('hidden');
+    }
+}
+
+function handleAuthSubmit(event) {
+    event.preventDefault();
+    alert("Berhasil!");
+    closeAuthModal();
 }
