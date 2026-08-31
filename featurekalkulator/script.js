@@ -11,7 +11,7 @@ function switchTab(tabName) {
     if (activeBtn) activeBtn.classList.add('active');
 }
 
-// Fitur Kalkulator Standard
+// Fitur Kalkulator 
 let expression = "12 + 24 × 3";
 let result = "84";
 
@@ -114,29 +114,4 @@ function updateCurrency() {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
-}
-
-// Fitur Popup Modal Log In / Sign Up
-function openAuthModal() {
-    document.getElementById('auth-modal').classList.add('active');
-}
-
-function closeAuthModal() {
-    document.getElementById('auth-modal').classList.remove('active');
-}
-
-function toggleAuthForm(mode) {
-    if (mode === 'signup') {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('signup-section').classList.remove('hidden');
-    } else {
-        document.getElementById('signup-section').classList.add('hidden');
-        document.getElementById('login-section').classList.remove('hidden');
-    }
-}
-
-function handleAuthSubmit(event) {
-    event.preventDefault();
-    alert("Berhasil!");
-    closeAuthModal();
 }
