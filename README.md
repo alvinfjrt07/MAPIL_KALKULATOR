@@ -40,11 +40,11 @@ konversi mata uang, dan menghitung BMI.
 
 | No | Nama | Tugas |
 |---|---|---|
-| 1 | Nama Anggota 1 | PM / Team Lead |
-| 2 | Nama Anggota 2 | Front-End |
-| 3 | Nama Anggota 3 | Logic Developer |
-| 4 | Nama Anggota 4 | UI/UX & Dokumentasi |
-| 5 | Nama Anggota 5 | QA / Tester |
+| 1 | Alvino Fajariyanto        | PM / Team Lead |
+| 2 | Florencia                 | Front-End |
+| 3 | Ibnu Wahyu Ramadhan       | Logic Developer |
+| 4 | Khoirul Azam Baha Koban   | UI/UX & Dokumentasi |
+| 5 | Semua Anggota             | QA / Tester |
 
 ## Cara Menjalankan
 
