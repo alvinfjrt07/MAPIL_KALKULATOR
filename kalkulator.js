@@ -1,208 +1,115 @@
-(function () {
-  const state = {
-    firstNumber: null,
-    operator: null,
-    waitingForSecondNumber: false,
-    displayValue: "0",
-  };
-
-  function formatResult(value) {
-    if (!Number.isFinite(value)) {
-      return "Error";
-    }
-
-    const fixedValue = Number.parseFloat(value.toFixed(10));
-    return String(fixedValue);
-  }
-
-  function updateDisplay(value) {
-    state.displayValue = value;
-
-    if (typeof document !== "undefined") {
-      const display = document.getElementById("display");
-      if (display) {
-        display.value = value;
-      }
-    }
-  }
-
-  function clearAll() {
-    state.firstNumber = null;
-    state.operator = null;
-    state.waitingForSecondNumber = false;
-    updateDisplay("0");
-  }
-
-  function deleteLastCharacter() {
-    if (state.displayValue === "Error") {
-      clearAll();
-      return;
-    }
-
-    if (state.waitingForSecondNumber) {
-      state.waitingForSecondNumber = false;
-      updateDisplay(String(state.firstNumber ?? "0"));
-      return;
-    }
-
-    if (state.displayValue.length <= 1) {
-      updateDisplay("0");
-      return;
-    }
-
-    const newValue = state.displayValue.slice(0, -1);
-    updateDisplay(newValue);
-  }
-
-  function calculateExpression(numberOne, numberTwo, selectedOperator) {
-    switch (selectedOperator) {
-      case "+":
-        return numberOne + numberTwo;
-      case "-":
-        return numberOne - numberTwo;
-      case "*":
-        return numberOne * numberTwo;
-      case "/":
-        if (numberTwo === 0) {
-          return "Error";
-        }
-        return numberOne / numberTwo;
-      default:
-        return numberTwo;
-    }
-  }
-
-  function handleNumber(value) {
-    if (state.displayValue === "Error") {
-      clearAll();
-    }
-
-    if (state.waitingForSecondNumber) {
-      updateDisplay(value);
-      state.waitingForSecondNumber = false;
-      return;
-    }
-
-    if (state.displayValue === "0") {
-      updateDisplay(value);
-      return;
-    }
-
-    updateDisplay(state.displayValue + value);
-  }
-
-  function handleDecimal() {
-    if (state.displayValue === "Error") {
-      clearAll();
-    }
-
-    if (state.waitingForSecondNumber) {
-      updateDisplay("0.");
-      state.waitingForSecondNumber = false;
-      return;
-    }
-
-    if (!state.displayValue.includes(".")) {
-      updateDisplay(state.displayValue + ".");
-    }
-  }
-
-  function handleOperator(nextOperator) {
-    const currentValue = Number(state.displayValue);
-
-    if (state.operator && state.waitingForSecondNumber) {
-      state.operator = nextOperator;
-      return;
-    }
-
-    if (state.firstNumber === null) {
-      state.firstNumber = currentValue;
-    } else if (state.operator) {
-      const result = calculateExpression(
-        state.firstNumber,
-        currentValue,
-        state.operator,
-      );
-
-      if (result === "Error") {
-        clearAll();
-        updateDisplay("Error");
-        return;
-      }
-
-      state.firstNumber = result;
-      updateDisplay(formatResult(result));
-    }
-
-    state.operator = nextOperator;
-    state.waitingForSecondNumber = true;
-  }
-
-  function handleEqual() {
-    if (state.operator === null || state.firstNumber === null) {
-      return;
-    }
-
-    const currentValue = Number(state.displayValue);
-    const result = calculateExpression(
-      state.firstNumber,
-      currentValue,
-      state.operator,
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`view-${tabName}`).classList.add('active');
+    
+    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+        btn.getAttribute('onclick').includes(tabName)
     );
+    if (activeBtn) activeBtn.classList.add('active');
+}
 
-    if (result === "Error") {
-      clearAll();
-      updateDisplay("Error");
-      return;
+
+let expression = "12 + 24 × 3";
+let result = "84";
+
+function updateCalcDisplay() {
+    document.getElementById('calc-expression').innerText = expression;
+    document.getElementById('calc-result').innerText = result;
+}
+
+function appendNum(num) {
+    if (expression === "0") expression = "";
+    expression += num;
+    updateCalcDisplay();
+}
+
+function appendOperator(op) {
+    expression += ` ${op} `;
+    updateCalcDisplay();
+}
+
+function clearCalc() {
+    expression = "";
+    result = "0";
+    updateCalcDisplay();
+}
+
+function toggleSign() {
+    if (expression.startsWith('-')) {
+        expression = expression.slice(1);
+    } else {
+        expression = '-' + expression;
     }
+    updateCalcDisplay();
+}
 
-    const formattedResult = formatResult(result);
-    updateDisplay(formattedResult);
-    state.firstNumber = Number(formattedResult);
-    state.operator = null;
-    state.waitingForSecondNumber = false;
-  }
-
-  if (typeof document !== "undefined") {
-    const numberButtons = document.querySelectorAll(".number");
-    const operatorButtons = document.querySelectorAll(".operator");
-    const clearButton = document.querySelector('[data-action="clear"]');
-    const deleteButton = document.querySelector('[data-action="delete"]');
-    const equalButton = document.querySelector('[data-action="calculate"]');
-    const decimalButton = document.querySelector(".number[data-value='.' ]");
-
-    numberButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        handleNumber(button.dataset.value);
-      });
-    });
-
-    operatorButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        handleOperator(button.dataset.value);
-      });
-    });
-
-    clearButton.addEventListener("click", clearAll);
-    deleteButton.addEventListener("click", deleteLastCharacter);
-    equalButton.addEventListener("click", handleEqual);
-
-    if (decimalButton) {
-      decimalButton.addEventListener("click", handleDecimal);
+function calculateResult() {
+    try {
+        let parsedExp = expression.replace(/×/g, '*').replace(/÷/g, '/');
+        result = eval(parsedExp);
+    } catch (e) {
+        result = "Error";
     }
-  }
+    updateCalcDisplay();
+}
 
-  if (typeof module !== "undefined") {
-    module.exports = {
-      clearAll,
-      deleteLastCharacter,
-      calculateExpression,
-      formatResult,
-      handleNumber,
-      handleDecimal,
-      handleOperator,
-      handleEqual,
-      state,
-    };
-  }
-})();
+
+function calculateBMI() {
+    const heightCm = parseFloat(document.getElementById('height-input').value);
+    const weightKg = parseFloat(document.getElementById('weight-input').value);
+
+    if (heightCm > 0 && weightKg > 0) {
+        const heightM = heightCm / 100;
+        const bmi = (weightKg / (heightM * heightM)).toFixed(1);
+        
+        document.getElementById('bmi-value').innerText = bmi;
+
+        const statusEl = document.getElementById('bmi-status');
+        const descEl = document.getElementById('bmi-desc');
+
+        if (bmi < 18.5) {
+            statusEl.innerText = "Kurus";
+            statusEl.className = "result-status label-kurus";
+            descEl.innerText = "Berat badan Anda kurang.";
+        } else if (bmi <= 24.9) {
+            statusEl.innerText = "Normal";
+            statusEl.className = "result-status status-green";
+            descEl.innerText = "Berat badan Anda ideal.";
+        } else if (bmi <= 29.9) {
+            statusEl.innerText = "Overweight";
+            statusEl.className = "result-status label-overweight";
+            descEl.innerText = "Berat badan Anda berlebih.";
+        } else {
+            statusEl.innerText = "Obesitas";
+            statusEl.className = "result-status label-obesitas";
+            descEl.innerText = "Anda berada dalam kategori obesitas.";
+        }
+    }
+}
+
+const rateUsdToIdr = 17649.80;
+
+function convInput(val) {
+    const usdInput = document.getElementById('usd-val');
+    if (usdInput.value === "0") usdInput.value = "";
+    usdInput.value += val;
+    updateCurrency();
+}
+
+function convBackspace() {
+    const usdInput = document.getElementById('usd-val');
+    usdInput.value = usdInput.value.slice(0, -1);
+    if (usdInput.value === "") usdInput.value = "0";
+    updateCurrency();
+}
+
+function updateCurrency() {
+    const usdVal = parseFloat(document.getElementById('usd-val').value) || 0;
+    const idrVal = usdVal * rateUsdToIdr;
+    document.getElementById('idr-val').value = idrVal.toLocaleString('id-ID', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
