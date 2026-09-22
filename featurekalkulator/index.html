@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Multiguna</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header Navigasi -->
+        <header class="app-header">
+            <button class="menu-btn">&#9776;</button>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" onclick="switchTab('calculator')">Kalkulator</button>
+                <button class="tab-btn" onclick="switchTab('converter')">Pengonversi</button>
+                <button class="tab-btn" onclick="switchTab('bmi')">BMI</button>
+            </nav>
+        </header>
+
+        <!-- Mode 1: Kalkulator Standard -->
+        <main id="view-calculator" class="tab-content active">
+            <div class="calc-display">
+                <div class="calc-expression" id="calc-expression">12 + 24 × 3</div>
+                <div class="calc-result" id="calc-result">84</div>
+                <div class="divider-line"></div>
+            </div>
+            <div class="keypad-grid">
+                <button class="btn btn-cyan" onclick="clearCalc()">AC</button>
+                <button class="btn btn-cyan" onclick="toggleSign()">+/-</button>
+                <button class="btn btn-cyan" onclick="appendOperator('%')">%</button>
+                <button class="btn btn-orange" onclick="appendOperator('÷')">÷</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('7')">7</button>
+                <button class="btn btn-gray" onclick="appendNum('8')">8</button>
+                <button class="btn btn-gray" onclick="appendNum('9')">9</button>
+                <button class="btn btn-orange" onclick="appendOperator('×')">×</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('4')">4</button>
+                <button class="btn btn-gray" onclick="appendNum('5')">5</button>
+                <button class="btn btn-gray" onclick="appendNum('6')">6</button>
+                <button class="btn btn-orange" onclick="appendOperator('-')">-</button>
+                
+                <button class="btn btn-gray" onclick="appendNum('1')">1</button>
+                <button class="btn btn-gray" onclick="appendNum('2')">2</button>
+                <button class="btn btn-gray" onclick="appendNum('3')">3</button>
+                <button class="btn btn-orange" onclick="appendOperator('+')">+</button>
+                
+                <button class="btn btn-gray btn-zero" onclick="appendNum('0')">0</button>
+                <button class="btn btn-gray" onclick="appendNum('.')">.</button>
+                <button class="btn btn-yellow" onclick="calculateResult()">=</button>
+            </div>
+        </main>
+
+        <!-- Mode 2: Kalkulator BMI -->
+        <main id="view-bmi" class="tab-content">
+            <div class="bmi-header">
+                <div class="bmi-icon">&#x1F9CD;</div>
+                <div class="bmi-header-text">
+                    <h2>Kalkulator BMI</h2>
+                    <p>Hitung Indeks Massa Tubuh Anda</p>
+                </div>
+            </div>
+            
+            <div class="bmi-inputs">
+                <div class="input-card">
+                    <label>Tinggi Badan</label>
+                    <div class="input-box">
+                        <input type="number" id="height-input" value="170">
+                        <span class="unit-select">cm &#9662;</span>
+                    </div>
+                </div>
+                <div class="input-card">
+                    <label>Berat Badan</label>
+                    <div class="input-box">
+                        <input type="number" id="weight-input" value="65">
+                        <span class="unit-select">kg &#9662;</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-calculate-bmi" onclick="calculateBMI()">Hitung BMI</button>
+
+            <div class="bmi-results">
+                <div class="result-box">
+                    <span class="result-title">BMI Anda</span>
+                    <div class="result-value" id="bmi-value">22.5</div>
+                </div>
+                <div class="result-box">
+                    <span class="result-title">Kategori</span>
+                    <div class="result-status status-green" id="bmi-status">Normal</div>
+                    <div class="result-subtext" id="bmi-desc">Berat badan Anda ideal.</div>
+                </div>
+            </div>
+
+            <div class="bmi-range-container">
+                <div class="range-bar">
+                    <div class="bar bar-kurus"></div>
+                    <div class="bar bar-normal"></div>
+                    <div class="bar bar-overweight"></div>
+                    <div class="bar bar-obesitas"></div>
+                </div>
+                <div class="range-labels">
+                    <div><small>&lt; 18.5</small><br><strong class="label-kurus">Kurus</strong></div>
+                    <div><small>18.5 - 24.9</small><br><strong class="label-normal">Normal</strong></div>
+                    <div><small>25 - 29.9</small><br><strong class="label-overweight">Overweight</strong></div>
+                    <div><small>&ge; 30</small><br><strong class="label-obesitas">Obesitas</strong></div>
+                </div>
+            </div>
+
+            <div class="bmi-info-box">
+                <div class="info-icon">i</div>
+                <p>BMI hanyalah indikator umum dan bukan diagnosis medis. Konsultasikan dengan profesional kesehatan untuk hasil yang lebih akurat.</p>
+            </div>
+        </main>
+
+        <!-- Mode 3: Pengonversi Mata Uang -->
+        <main id="view-converter" class="tab-content">
+            <div class="currency-display">
+                <div class="currency-row">
+                    <span class="currency-label">Dollar AS USD &#8644;</span>
+                    <input type="text" id="usd-val" value="100" class="currency-input">
+                </div>
+                <div class="currency-row">
+                    <span class="currency-label">Indonesia IDR &#8644;</span>
+                    <input type="text" id="idr-val" value="1.764.980,00" class="currency-input" readonly>
+                </div>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="keypad-grid simple-grid">
+                <button class="btn btn-gray" onclick="convInput('7')">7</button>
+                <button class="btn btn-gray" onclick="convInput('8')">8</button>
+                <button class="btn btn-gray" onclick="convInput('9')">9</button>
+                <button class="btn btn-orange" onclick="convOp('÷')">÷</button>
+                
+                <button class="btn btn-gray" onclick="convInput('4')">4</button>
+                <button class="btn btn-gray" onclick="convInput('5')">5</button>
+                <button class="btn btn-gray" onclick="convInput('6')">6</button>
+                <button class="btn btn-gray empty-btn"></button>
+                
+                <button class="btn btn-gray" onclick="convInput('1')">1</button>
+                <button class="btn btn-gray" onclick="convInput('2')">2</button>
+                <button class="btn btn-gray" onclick="convInput('3')">3</button>
+                <button class="btn btn-gray empty-btn"></button>
+                
+                <button class="btn btn-gray btn-zero" onclick="convInput('0')">0</button>
+                <button class="btn btn-gray" onclick="convInput(',')">,</button>
+                <button class="btn btn-yellow" onclick="convBackspace()">&#x232B;</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
