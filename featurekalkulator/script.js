@@ -1,4 +1,4 @@
-// Navigasi Tab (Kalkulator, Pengonversi, BMI)
+
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -11,7 +11,7 @@ function switchTab(tabName) {
     if (activeBtn) activeBtn.classList.add('active');
 }
 
-// Fitur Kalkulator 
+
 let expression = "12 + 24 × 3";
 let result = "84";
 
@@ -56,7 +56,7 @@ function calculateResult() {
     updateCalcDisplay();
 }
 
-// Fitur BMI
+
 function calculateBMI() {
     const heightCm = parseFloat(document.getElementById('height-input').value);
     const weightKg = parseFloat(document.getElementById('weight-input').value);
@@ -90,7 +90,6 @@ function calculateBMI() {
     }
 }
 
-// Fitur Pengonversi Mata Uang
 const rateUsdToIdr = 17649.80;
 
 function convInput(val) {
